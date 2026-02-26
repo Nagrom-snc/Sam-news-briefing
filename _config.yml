@@ -1,0 +1,5 @@
+title: Sam News Daily Briefings
+description: Public archive of daily briefings — curated summaries of China- and AI-related news.
+baseurl: "/sam-news-briefings"
+theme: jekyll-theme-minimal
+markdown: kramdown
