@@ -1,0 +1,9 @@
+# OS and editors
+.DS_Store
+._*
+*.swp
+*~
+
+# No data/ or config from main project should ever be here; this ignore is a safety net for local drafts if needed
+*.env
+*.env.local
