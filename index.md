@@ -13,4 +13,4 @@ Public archive of daily briefings: curated summaries of China- and AI-related ne
 - [2026-02-25 — 20260225_Daily_Briefing]({{ '/briefings/2026-02-25/' | relative_url }})
 - [2026-02-24 — 20260224_Daily_Briefing]({{ '/briefings/2026-02-24/' | relative_url }})
 
-*Detailed per-article analyses are available in the internal Sam News pipeline only.*
+*Detailed per-article analyses are available in the internal News pipeline only.*
