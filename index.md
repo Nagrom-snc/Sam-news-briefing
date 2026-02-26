@@ -3,8 +3,6 @@ layout: default
 title: Sam News Daily Briefings
 ---
 
-# Sam News Daily Briefings
-
 Public archive of daily briefings: curated summaries of China- and AI-related news, with executive summaries, priority sections, and trend analysis.
 
 **Contents:** Markdown briefings only (no raw articles, no per-article analyses).
