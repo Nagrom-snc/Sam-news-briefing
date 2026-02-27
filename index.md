@@ -9,8 +9,9 @@ Public archive of daily briefings: curated summaries of China- and AI-related ne
 
 ## Index
 
-- [2026-02-26 — 20260226_Daily_Briefing]({{ '/briefings/2026-02-26/' | relative_url }})
-- [2026-02-25 — 20260225_Daily_Briefing]({{ '/briefings/2026-02-25/' | relative_url }})
-- [2026-02-24 — 20260224_Daily_Briefing]({{ '/briefings/2026-02-24/' | relative_url }})
+- [2026-02-27 (Fri)]({{ '/briefings/2026-02-27/' | relative_url }})
+- [2026-02-26 (Thu)]({{ '/briefings/2026-02-26/' | relative_url }})
+- [2026-02-25 (Wed)]({{ '/briefings/2026-02-25/' | relative_url }})
+- [2026-02-24 (Tue)]({{ '/briefings/2026-02-24/' | relative_url }})
 
-*Detailed per-article analyses are available in the internal News pipeline only.*
+*Detailed per-article analyses are available in the internal Sam News pipeline only.*
