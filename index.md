@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Sam News Daily Briefings
+title: News Daily Briefings
 ---
 
 Public archive of daily briefings: curated summaries of China- and AI-related news, with executive summaries, priority sections, and trend analysis.
