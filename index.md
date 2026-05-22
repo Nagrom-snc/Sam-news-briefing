@@ -9,6 +9,7 @@ Public archive of daily briefings: curated summaries of China- and AI-related ne
 
 ## Index
 
+- [2026-05-22 (Fri)]({{ '/briefings/2026-05-22/' | relative_url }})
 - [2026-05-21 (Thu)]({{ '/briefings/2026-05-21/' | relative_url }})
 - [2026-05-20 (Wed)]({{ '/briefings/2026-05-20/' | relative_url }})
 - [2026-05-19 (Tue)]({{ '/briefings/2026-05-19/' | relative_url }})
