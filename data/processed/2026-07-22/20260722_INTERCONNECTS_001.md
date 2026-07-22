@@ -12,8 +12,8 @@ content_hash: "7022e37c49306f98"
 word_count: 3661
 language: "en"
 processed_at: 2026-07-22T07:18:51
-analysis_file: ""
-analysis_status: "pending"
+analysis_file: "20260722_INTERCONNECTS_001_Analysis.md"
+analysis_status: "completed"
 ---
 
 # Kimi K3: The open-weights escalation
