@@ -1,23 +1,105 @@
 {
   "date": "2026-07-23",
   "articles": [
-    {"id": "20260723_FT_001", "tier": "A", "title": "EU urged to use more ‘clout’ against Beijing"},
-    {"id": "20260723_FT_002", "tier": "A", "title": "‘Litany of failures’ behind Hong Kong’s worst tragedy in decades"},
-    {"id": "20260723_FT_003", "tier": "A", "title": "How we made it: China’s air pollution clean-up — and the rebound"},
-    {"id": "20260723_FT_004", "tier": "A", "title": "OpenAI hacking incident exposes mounting risks in AI arms race"},
-    {"id": "20260723_FT_005", "tier": "A", "title": "Betting account in George Cottrell’s name received $9mn in crypto from unidentified sources"},
-    {"id": "20260723_REUTERS_001", "tier": "A", "title": "AI shortens drug discovery to around 1 year in China, Insilico CEO says"},
-    {"id": "20260723_REUTERS_002", "tier": "A", "title": "Intel, AMD sign long-term server CPU deals with Chinese clients as prices surge, sources say"},
-    {"id": "20260723_Reuters_003", "tier": "A", "title": "Chinese AI's role in stopping rogue OpenAI agent shows cost of US guardrails"},
-    {"id": "20260723_Reuters_004", "tier": "B", "title": "Volkswagen's CARIZON and Horizon Robotics deepen self-driving partnership in China"},
-    {"id": "20260723_SCMP_001", "tier": "B", "title": "World’s first AI model to earn perfect score at maths Olympiad comes from China’s RedNote"},
-    {"id": "20260723_SCMP_002", "tier": "B", "title": "Beijing ramps up computing power to boost ‘token economy’ in tech race with US"},
-    {"id": "20260723_SCMP_003", "tier": "B", "title": "Hugging Face deploys Zhipu’s GLM 5.2 model to contain autonomous OpenAI cyberattack"},
-    {"id": "20260723_SCMP_004", "tier": "B", "title": "Chinese robot maker AgiBot pursues Hong Kong IPO, hiring 3 sponsors: sources"},
-    {"id": "20260723_UNK_002", "tier": "A", "title": "Kimi and Xi - ChinaTalk"},
-    {"id": "20260723_UNK_003", "tier": "B", "title": "A theory of power - Comment is Freed"},
-    {"id": "20260723_UNK_004", "tier": "A", "title": "MUST READ: DeepSeek Liang Wenfeng Investor Meeting"},
-    {"id": "20260723_UNK_005", "tier": "A", "title": "WAIC 2026: a business take and a human take on China's largest AI conference"},
-    {"id": "20260723_UNK_006", "tier": "A", "title": "Xi's AI power play - Euractiv Red Thread"}
+    {
+      "id": "20260723_FT_001",
+      "tier": "A",
+      "title": "EU urged to use more ‘clout’ against Beijing"
+    },
+    {
+      "id": "20260723_FT_002",
+      "tier": "A",
+      "title": "‘Litany of failures’ behind Hong Kong’s worst tragedy in decades"
+    },
+    {
+      "id": "20260723_FT_003",
+      "tier": "A",
+      "title": "How we made it: China’s air pollution clean-up — and the rebound"
+    },
+    {
+      "id": "20260723_FT_004",
+      "tier": "A",
+      "title": "OpenAI hacking incident exposes mounting risks in AI arms race"
+    },
+    {
+      "id": "20260723_FT_005",
+      "tier": "A",
+      "title": "Betting account in George Cottrell’s name received $9mn in crypto from unidentified sources"
+    },
+    {
+      "id": "20260723_REUTERS_001",
+      "tier": "A",
+      "title": "AI shortens drug discovery to around 1 year in China, Insilico CEO says"
+    },
+    {
+      "id": "20260723_REUTERS_002",
+      "tier": "A",
+      "title": "Intel, AMD sign long-term server CPU deals with Chinese clients as prices surge, sources say"
+    },
+    {
+      "id": "20260723_Reuters_003",
+      "tier": "A",
+      "title": "Chinese AI's role in stopping rogue OpenAI agent shows cost of US guardrails"
+    },
+    {
+      "id": "20260723_Reuters_004",
+      "tier": "B",
+      "title": "Volkswagen's CARIZON and Horizon Robotics deepen self-driving partnership in China"
+    },
+    {
+      "id": "20260723_SCMP_001",
+      "tier": "B",
+      "title": "World’s first AI model to earn perfect score at maths Olympiad comes from China’s RedNote"
+    },
+    {
+      "id": "20260723_SCMP_002",
+      "tier": "B",
+      "title": "Beijing ramps up computing power to boost ‘token economy’ in tech race with US"
+    },
+    {
+      "id": "20260723_SCMP_003",
+      "tier": "B",
+      "title": "Hugging Face deploys Zhipu’s GLM 5.2 model to contain autonomous OpenAI cyberattack"
+    },
+    {
+      "id": "20260723_SCMP_004",
+      "tier": "B",
+      "title": "Chinese robot maker AgiBot pursues Hong Kong IPO, hiring 3 sponsors: sources"
+    },
+    {
+      "id": "20260723_UNK_002",
+      "tier": "A",
+      "title": "Kimi and Xi - ChinaTalk"
+    },
+    {
+      "id": "20260723_UNK_003",
+      "tier": "B",
+      "title": "A theory of power - Comment is Freed"
+    },
+    {
+      "id": "20260723_UNK_004",
+      "tier": "A",
+      "title": "MUST READ: DeepSeek Liang Wenfeng Investor Meeting"
+    },
+    {
+      "id": "20260723_UNK_005",
+      "tier": "A",
+      "title": "WAIC 2026: a business take and a human take on China's largest AI conference"
+    },
+    {
+      "id": "20260723_UNK_006",
+      "tier": "A",
+      "title": "Xi's AI power play - Euractiv Red Thread"
+    },
+    {
+      "id": "20260723_MISTRAL_001",
+      "tier": "A",
+      "title": "Your Prompts and Skills need a system of record."
+    },
+    {
+      "id": "20260723_WUBLOCK_001",
+      "tier": "B",
+      "title": "Zilliqa：Ledger 应用签名随机数漏洞可导致私钥被恢复，原生交易已暂停"
+    }
   ]
 }
