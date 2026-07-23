@@ -57,3 +57,12 @@ None. No clear mechanical defects (missing/typo phase headings, empty framework)
 ## Summary
 
 **PASS** — 18 raw, 18 analyses, 18 CSV rows; all structural and framework checks green; soft caps clean; 3/3 spot-checks grounded; briefing N/A.
+
+
+## Briefing re-check (post-write)
+- File: `briefings/2026-07-23.md`
+- Bytes: 29607
+- §4 rows: 18 (expect 18)
+- Sections 0–4: True
+- Path leaks: False
+- Result: PASS
