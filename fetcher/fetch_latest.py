@@ -126,6 +126,12 @@ def story_key(url: str) -> str:
     return f"{host}{parsed.path}".lower()
 
 
+def story_sort_tuple(item: dict[str, str]) -> tuple[int, str]:
+    """Dated stories first (newest), undated last."""
+    published = item.get("published") or ""
+    return (1 if published else 0, published)
+
+
 def parse_datetime(value: str | None, now: datetime | None = None) -> str | None:
     if not value:
         return None
@@ -414,11 +420,7 @@ def fetch_source(
         seen.add(key)
         deduped.append(story)
 
-    def sort_key(item: dict[str, str]) -> tuple[int, str]:
-        published = item.get("published") or ""
-        return (0 if published else 1, published)
-
-    deduped.sort(key=sort_key, reverse=True)
+    deduped.sort(key=story_sort_tuple, reverse=True)
     if max_per_source > 0:
         deduped = deduped[:max_per_source]
     return {
@@ -484,10 +486,7 @@ def collect_latest(
             seen.add(key)
             stories.append(story)
 
-    stories.sort(
-        key=lambda item: (0 if item.get("published") else 1, item.get("published") or ""),
-        reverse=True,
-    )
+    stories.sort(key=story_sort_tuple, reverse=True)
     failures = [
         {
             "source_id": result["id"],

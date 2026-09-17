@@ -90,6 +90,19 @@ class FeedParseTests(unittest.TestCase):
         self.assertIn("https://rhg.com/research/the-banks-behind-the-china-shock", urls)
 
 
+class SortTests(unittest.TestCase):
+    def test_undated_stories_sort_last(self) -> None:
+        from fetcher.fetch_latest import story_sort_tuple
+
+        items = [
+            {"title": "old", "published": "2026-09-16T00:00:00+00:00", "url": "https://a/1"},
+            {"title": "undated", "published": "", "url": "https://a/2"},
+            {"title": "new", "published": "2026-09-17T00:00:00+00:00", "url": "https://a/3"},
+        ]
+        items.sort(key=story_sort_tuple, reverse=True)
+        self.assertEqual([item["title"] for item in items], ["new", "old", "undated"])
+
+
 class IsolationTests(unittest.TestCase):
     def test_one_source_failure_does_not_stop_the_rest(self) -> None:
         catalog = {
