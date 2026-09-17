@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+data/latest/*.json
+data/latest/*.txt
+!data/latest/.gitkeep
