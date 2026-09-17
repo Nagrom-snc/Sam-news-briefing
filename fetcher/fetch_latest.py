@@ -455,6 +455,9 @@ def fetch_endpoint(
         story["source_id"] = source["id"]
         story["source_name"] = source["name"]
         story["endpoint"] = endpoint.get("label", "")
+    needles = endpoint.get("url_contains") or []
+    if needles:
+        stories = [story for story in stories if any(needle in story["url"] for needle in needles)]
     return stories, None
 
 

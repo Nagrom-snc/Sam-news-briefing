@@ -83,7 +83,12 @@
       "homepage": "https://rhg.com",
       "article_patterns": ["rhg.com/research/"],
       "search_endpoints": [
-        {"kind": "rss", "label": "search", "url": "https://rhg.com/?s={query}&feed=rss2"}
+        {
+          "kind": "rss",
+          "label": "search",
+          "url": "https://rhg.com/?s={query}&feed=rss2",
+          "url_contains": ["/research/", "/news/", "/press/"]
+        }
       ],
       "endpoints": [
         {"kind": "html_listing", "label": "homepage-research", "url": "https://rhg.com/", "parser": "rhg_research"},
