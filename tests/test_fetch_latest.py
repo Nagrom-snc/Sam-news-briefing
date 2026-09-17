@@ -15,12 +15,15 @@ sys.path.insert(0, str(ROOT))
 from fetcher.fetch_latest import (  # noqa: E402
     canonicalize_url,
     collect_latest,
+    expand_endpoints,
+    interpolate_url,
     load_sources,
     parse_datetime,
     parse_rhg_research,
     parse_rss_or_atom,
     parse_secrss_listing,
     story_key,
+    story_matches,
 )
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -88,6 +91,78 @@ class FeedParseTests(unittest.TestCase):
         self.assertEqual(len(stories), 2)
         urls = {item["url"] for item in stories}
         self.assertIn("https://rhg.com/research/the-banks-behind-the-china-shock", urls)
+
+
+class KeywordTests(unittest.TestCase):
+    def test_word_boundary_does_not_match_air(self) -> None:
+        story = {"title": "Hot air balloon over Thailand", "summary": "", "url": "", "author": ""}
+        self.assertFalse(story_matches(story, ["AI"]))
+        self.assertTrue(story_matches({"title": "China AI chips", "summary": "", "url": "", "author": ""}, ["AI"]))
+
+    def test_chinese_substring(self) -> None:
+        story = {"title": "浅析美国空军人工智能训练战略", "summary": "", "url": "", "author": ""}
+        self.assertTrue(story_matches(story, ["人工智能"]))
+
+    def test_match_all_requires_every_term(self) -> None:
+        story = {"title": "China tariff talks", "summary": "", "url": "", "author": ""}
+        self.assertTrue(story_matches(story, ["China", "AI"], mode="any"))
+        self.assertFalse(story_matches(story, ["China", "AI"], mode="all"))
+
+    def test_search_url_interpolation(self) -> None:
+        self.assertEqual(
+            interpolate_url("https://www.politico.eu/search/{query}/feed/", "Hong Kong"),
+            "https://www.politico.eu/search/Hong%20Kong/feed/",
+        )
+
+    def test_expand_search_endpoints(self) -> None:
+        source = {
+            "endpoints": [{"kind": "rss", "label": "home", "url": "https://rhg.com/feed/"}],
+            "search_endpoints": [
+                {"kind": "rss", "label": "search", "url": "https://rhg.com/?s={query}&feed=rss2"}
+            ],
+        }
+        expanded = expand_endpoints(source, ["China", "AI"])
+        self.assertEqual(len(expanded), 3)
+        self.assertTrue(any("s=China" in item["url"] for item in expanded))
+
+    def test_keyword_filter_keeps_matching_feed_items(self) -> None:
+        catalog = {
+            "sources": [
+                {
+                    "id": "FT",
+                    "name": "Financial Times",
+                    "homepage": "https://www.ft.com",
+                    "endpoints": [{"kind": "rss", "label": "home", "url": "https://ok.example/feed"}],
+                }
+            ]
+        }
+        rss = (FIXTURES / "ft_rss.xml").read_bytes()
+
+        def fake_fetch(url: str, timeout: int) -> tuple[str, bytes, str]:
+            return url, rss, "application/rss+xml"
+
+        payload = collect_latest(
+            catalog,
+            timeout=5,
+            workers=1,
+            max_per_source=5,
+            fetch_fn=fake_fetch,
+            keywords=["China"],
+        )
+        self.assertEqual(payload["story_count"], 1)
+        self.assertIn("China", payload["stories"][0]["title"])
+        self.assertIn("China", payload["stories"][0]["matched_keywords"])
+
+        empty = collect_latest(
+            catalog,
+            timeout=5,
+            workers=1,
+            max_per_source=5,
+            fetch_fn=fake_fetch,
+            keywords=["DeepSeek"],
+        )
+        self.assertEqual(empty["story_count"], 0)
+        self.assertIn("FT", empty["ok_sources"])
 
 
 class SortTests(unittest.TestCase):

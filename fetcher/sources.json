@@ -43,6 +43,9 @@
       "name": "POLITICO Europe",
       "homepage": "https://www.politico.eu",
       "article_patterns": ["politico.eu/article/", "politico.eu/newsletter/"],
+      "search_endpoints": [
+        {"kind": "rss", "label": "search", "url": "https://www.politico.eu/search/{query}/feed/"}
+      ],
       "endpoints": [
         {"kind": "rss", "label": "latest", "url": "https://www.politico.eu/feed/"},
         {"kind": "rss", "label": "technology", "url": "https://www.politico.eu/section/technology/feed/"},
@@ -79,6 +82,9 @@
       "name": "Rhodium Group",
       "homepage": "https://rhg.com",
       "article_patterns": ["rhg.com/research/"],
+      "search_endpoints": [
+        {"kind": "rss", "label": "search", "url": "https://rhg.com/?s={query}&feed=rss2"}
+      ],
       "endpoints": [
         {"kind": "html_listing", "label": "homepage-research", "url": "https://rhg.com/", "parser": "rhg_research"},
         {"kind": "html_listing", "label": "china-research", "url": "https://rhg.com/china/", "parser": "rhg_research"},
@@ -99,6 +105,9 @@
       "name": "安全内参 (Secrss)",
       "homepage": "https://www.secrss.com",
       "article_patterns": ["secrss.com/articles/"],
+      "search_endpoints": [
+        {"kind": "html_listing", "label": "search", "url": "https://www.secrss.com/search?keywords={query}", "parser": "secrss_listing"}
+      ],
       "endpoints": [
         {"kind": "html_listing", "label": "articles", "url": "https://www.secrss.com/articles", "parser": "secrss_listing"}
       ]

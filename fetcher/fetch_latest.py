@@ -19,11 +19,12 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Callable, Iterable
 from urllib.error import HTTPError, URLError
-from urllib.parse import parse_qsl, urlencode, urljoin, urlparse, urlunparse
+from urllib.parse import parse_qsl, quote, urlencode, urljoin, urlparse, urlunparse
 from urllib.request import Request, urlopen
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_SOURCES = HERE / "sources.json"
+DEFAULT_KEYWORDS = HERE / "keywords.json"
 DEFAULT_JSON_OUT = HERE.parent / "data" / "latest" / "latest.json"
 DEFAULT_LIST_OUT = HERE.parent / "data" / "latest" / "latest_urls.txt"
 USER_AGENT = (
@@ -44,6 +45,8 @@ TRACKING_QUERY_KEYS = {
     "srnd",
     "r",
     "hide_intro_popup",
+    "_rt",
+    "_rt_nonce",
 }
 DROP_QUERY_PREFIXES = ("utm_", "syn-")
 TAG_RE = re.compile(r"<[^>]+>")
@@ -130,6 +133,78 @@ def story_sort_tuple(item: dict[str, str]) -> tuple[int, str]:
     """Dated stories first (newest), undated last."""
     published = item.get("published") or ""
     return (1 if published else 0, published)
+
+
+def load_keyword_config(path: Path) -> dict[str, Any]:
+    with path.open(encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def normalize_keywords(values: Iterable[str] | None) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for value in values or []:
+        item = unescape(str(value)).strip()
+        if not item:
+            continue
+        key = item.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
+    return out
+
+
+def interpolate_url(template: str, query: str) -> str:
+    return template.replace("{query}", quote(query, safe=""))
+
+
+def expand_endpoints(source: dict[str, Any], search_queries: list[str]) -> list[dict[str, Any]]:
+    endpoints = [dict(item) for item in (source.get("endpoints") or [])]
+    if not search_queries:
+        return endpoints
+    for spec in source.get("search_endpoints") or []:
+        url = spec.get("url") or ""
+        if "{query}" not in url:
+            endpoints.append(dict(spec))
+            continue
+        for query in search_queries:
+            endpoint = dict(spec)
+            endpoint["url"] = interpolate_url(url, query)
+            endpoint["label"] = f"{spec.get('label', 'search')}:{query}"
+            endpoints.append(endpoint)
+    return endpoints
+
+
+def keyword_pattern(keyword: str) -> re.Pattern[str]:
+    if any(ord(char) > 127 for char in keyword):
+        return re.compile(re.escape(keyword), re.I)
+    return re.compile(rf"(?<![A-Za-z0-9]){re.escape(keyword)}(?![A-Za-z0-9])", re.I)
+
+
+def matching_keywords(story: dict[str, str], keywords: list[str]) -> list[str]:
+    haystack = " ".join(
+        [
+            story.get("title") or "",
+            story.get("summary") or "",
+            story.get("url") or "",
+            story.get("author") or "",
+        ]
+    )
+    hits: list[str] = []
+    for keyword in keywords:
+        if keyword_pattern(keyword).search(haystack):
+            hits.append(keyword)
+    return hits
+
+
+def story_matches(story: dict[str, str], keywords: list[str], mode: str = "any") -> bool:
+    if not keywords:
+        return True
+    hits = matching_keywords(story, keywords)
+    if mode == "all":
+        return len(hits) == len(keywords)
+    return bool(hits)
 
 
 def parse_datetime(value: str | None, now: datetime | None = None) -> str | None:
@@ -388,8 +463,13 @@ def fetch_source(
     timeout: int,
     fetch_fn: FetchFn,
     max_per_source: int,
+    keywords: list[str] | None = None,
+    match_mode: str = "any",
+    search_queries: list[str] | None = None,
 ) -> dict[str, Any]:
-    endpoints = source.get("endpoints") or []
+    keywords = normalize_keywords(keywords)
+    queries = normalize_keywords(search_queries) or keywords
+    endpoints = expand_endpoints(source, queries)
     if not endpoints:
         return {
             "id": source["id"],
@@ -413,11 +493,17 @@ def fetch_source(
 
     deduped: list[dict[str, str]] = []
     seen: set[str] = set()
+    fetched_any = bool(stories)
     for story in stories:
         key = story_key(story["url"])
         if key in seen:
             continue
         seen.add(key)
+        hits = matching_keywords(story, keywords) if keywords else []
+        if keywords and not story_matches(story, keywords, match_mode):
+            continue
+        if hits:
+            story["matched_keywords"] = ", ".join(hits)
         deduped.append(story)
 
     deduped.sort(key=story_sort_tuple, reverse=True)
@@ -425,7 +511,7 @@ def fetch_source(
         deduped = deduped[:max_per_source]
     return {
         "id": source["id"],
-        "ok": bool(deduped),
+        "ok": bool(deduped) or fetched_any,
         "stories": deduped,
         "errors": errors,
     }
@@ -444,8 +530,13 @@ def collect_latest(
     max_per_source: int = 12,
     only: set[str] | None = None,
     fetch_fn: FetchFn = default_fetch,
+    keywords: list[str] | None = None,
+    match_mode: str = "any",
+    search_queries: list[str] | None = None,
 ) -> dict[str, Any]:
     sources = catalog["sources"]
+    keywords = normalize_keywords(keywords)
+    search_queries = normalize_keywords(search_queries) or keywords
     if only:
         wanted = {item.upper() for item in only}
         sources = [src for src in sources if src["id"].upper() in wanted]
@@ -456,7 +547,16 @@ def collect_latest(
     results: list[dict[str, Any]] = []
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         futures = {
-            pool.submit(fetch_source, source, timeout, fetch_fn, max_per_source): source["id"]
+            pool.submit(
+                fetch_source,
+                source,
+                timeout,
+                fetch_fn,
+                max_per_source,
+                keywords,
+                match_mode,
+                search_queries,
+            ): source["id"]
             for source in sources
         }
         for future in as_completed(futures):
@@ -505,6 +605,9 @@ def collect_latest(
     ]
     return {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "keywords": keywords,
+        "match": match_mode if keywords else "",
+        "search_queries": search_queries,
         "source_count": len(sources),
         "ok_sources": [result["id"] for result in results if result["ok"]],
         "failed_sources": [result["id"] for result in results if not result["ok"]],
@@ -520,7 +623,12 @@ def write_outputs(payload: dict[str, Any], json_out: Path, list_out: Path) -> No
     list_out.parent.mkdir(parents=True, exist_ok=True)
     json_out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     date_stamp = payload["generated_at"][:10]
-    lines = [f"# Sam intake {date_stamp} (auto-fetched latest news)", ""]
+    keywords = payload.get("keywords") or []
+    if keywords:
+        header = f"# Sam intake {date_stamp} (keyword fetch: {', '.join(keywords)})"
+    else:
+        header = f"# Sam intake {date_stamp} (auto-fetched latest news)"
+    lines = [header, ""]
     for story in payload["stories"]:
         lines.append(story["url"])
     list_out.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -548,6 +656,30 @@ def build_parser() -> argparse.ArgumentParser:
         help="Limit to one source id (repeatable), e.g. --source SCMP --source FT",
     )
     parser.add_argument(
+        "--keyword",
+        action="append",
+        dest="keywords",
+        help="Keep/search stories matching this term (repeatable). Enables keyword mode.",
+    )
+    parser.add_argument(
+        "--keywords",
+        action="store_true",
+        dest="use_default_keywords",
+        help="Use fetcher/keywords.json (China/AI terms from the 17 Sep intake).",
+    )
+    parser.add_argument(
+        "--keywords-file",
+        type=Path,
+        default=None,
+        help="JSON file with keywords / search_queries / match (default: fetcher/keywords.json with --keywords).",
+    )
+    parser.add_argument(
+        "--match",
+        choices=["any", "all"],
+        default=None,
+        help="Keyword match mode (default: any).",
+    )
+    parser.add_argument(
         "--stdout",
         action="store_true",
         help="Also print the JSON payload to stdout",
@@ -555,15 +687,35 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def resolve_keyword_args(args: argparse.Namespace) -> tuple[list[str], list[str], str]:
+    keywords: list[str] = []
+    search_queries: list[str] = []
+    match_mode = args.match or "any"
+    if args.keywords_file or args.use_default_keywords:
+        config = load_keyword_config(args.keywords_file or DEFAULT_KEYWORDS)
+        keywords.extend(config.get("keywords") or [])
+        search_queries.extend(config.get("search_queries") or [])
+        if args.match is None and config.get("match"):
+            match_mode = str(config["match"])
+    keywords.extend(args.keywords or [])
+    keywords = normalize_keywords(keywords)
+    search_queries = normalize_keywords(search_queries) or keywords
+    return keywords, search_queries, match_mode
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     catalog = load_sources(args.sources)
+    keywords, search_queries, match_mode = resolve_keyword_args(args)
     payload = collect_latest(
         catalog,
         timeout=args.timeout,
         workers=args.workers,
         max_per_source=args.max_per_source,
         only=set(args.only) if args.only else None,
+        keywords=keywords,
+        match_mode=match_mode,
+        search_queries=search_queries,
     )
     write_outputs(payload, args.out, args.list_out)
     summary = (
@@ -571,6 +723,8 @@ def main(argv: list[str] | None = None) -> int:
         f"{len(payload['ok_sources'])}/{payload['source_count']} sources; "
         f"wrote {args.out} and {args.list_out}"
     )
+    if keywords:
+        summary += f"; keywords={', '.join(keywords)}"
     if payload["failed_sources"]:
         summary += f"; failed: {', '.join(payload['failed_sources'])}"
     print(summary, file=sys.stderr)

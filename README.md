@@ -27,6 +27,12 @@ python3 fetcher/fetch_latest.py --max-per-source 8 --timeout 15 --workers 6
 # One or two publishers
 python3 fetcher/fetch_latest.py --source SCMP --source FT
 
+# Keyword search + filter (China/AI terms from the 17 Sep intake)
+python3 fetcher/fetch_latest.py --keywords
+
+# Ad-hoc terms: search publisher search pages where they exist, else filter feeds
+python3 fetcher/fetch_latest.py --keyword DeepSeek --keyword Huawei
+
 # Custom output (JSON + intake list)
 python3 fetcher/fetch_latest.py \
   --out data/latest/2026-09-17.json \
@@ -55,6 +61,15 @@ Article URLs in `260917_list.txt` were grouped by publisher, then each publisher
 | WeChat | `mp.weixin.qq.com/s/…` | No public feed — skipped with an error |
 
 Edit `fetcher/sources.json` to add or disable endpoints. Tracking query params (`utm_*`, `syn-*`, `module`, `pgtype`, …) are stripped so the intake list is stable.
+
+### Keyword fetch
+
+`--keywords` (or `--keyword TERM`) does two things:
+
+1. **Search** native publisher endpoints that accept a query (POLITICO Europe `/search/{query}/feed/`, Rhodium `/?s={query}&feed=rss2`, 安全内参 `/search?keywords=`).
+2. **Filter** every source’s RSS/listing hits so only headlines/summaries/URLs matching the terms are kept (word-boundary match; Chinese terms are substring). Default terms live in `fetcher/keywords.json`.
+
+FT, SCMP, CNBC, Bloomberg, and POLITICO US do not expose a public keyword RSS we can poll, so those sources contribute matching stories from their latest section feeds. WeChat still has no public listing.
 
 ### Tests
 
