@@ -1,0 +1,143 @@
+{
+  "derived_from": "260917_list.txt",
+  "notes": "Publisher catalog inferred from the 2026-09-17 intake URLs: article path patterns, then the public RSS/Atom or listing page each outlet actually serves.",
+  "sources": [
+    {
+      "id": "FT",
+      "name": "Financial Times",
+      "homepage": "https://www.ft.com",
+      "article_patterns": ["ft.com/content/", "app.ft.com/content/"],
+      "endpoints": [
+        {"kind": "rss", "label": "home-international", "url": "https://www.ft.com/rss/home/international"},
+        {"kind": "rss", "label": "china", "url": "https://www.ft.com/china?format=rss"},
+        {"kind": "rss", "label": "ai", "url": "https://www.ft.com/artificial-intelligence?format=rss"},
+        {"kind": "rss", "label": "technology", "url": "https://www.ft.com/technology?format=rss"},
+        {"kind": "rss", "label": "world", "url": "https://www.ft.com/world?format=rss"}
+      ]
+    },
+    {
+      "id": "SCMP",
+      "name": "South China Morning Post",
+      "homepage": "https://www.scmp.com",
+      "article_patterns": ["scmp.com/"],
+      "endpoints": [
+        {"kind": "rss", "label": "news", "url": "https://www.scmp.com/rss/91/feed"},
+        {"kind": "rss", "label": "tech", "url": "https://www.scmp.com/rss/36/feed"},
+        {"kind": "rss", "label": "china", "url": "https://www.scmp.com/rss/4/feed"},
+        {"kind": "rss", "label": "business", "url": "https://www.scmp.com/rss/92/feed"},
+        {"kind": "rss", "label": "hong-kong", "url": "https://www.scmp.com/rss/2/feed"}
+      ]
+    },
+    {
+      "id": "POLITICO",
+      "name": "POLITICO",
+      "homepage": "https://www.politico.com",
+      "article_patterns": ["politico.com/news/", "politico.com/newsletters/"],
+      "endpoints": [
+        {"kind": "rss", "label": "politics", "url": "https://rss.politico.com/politics-news.xml"},
+        {"kind": "rss", "label": "technology", "url": "https://rss.politico.com/technology.xml"}
+      ]
+    },
+    {
+      "id": "POLITICO_EU",
+      "name": "POLITICO Europe",
+      "homepage": "https://www.politico.eu",
+      "article_patterns": ["politico.eu/article/", "politico.eu/newsletter/"],
+      "endpoints": [
+        {"kind": "rss", "label": "latest", "url": "https://www.politico.eu/feed/"},
+        {"kind": "rss", "label": "technology", "url": "https://www.politico.eu/section/technology/feed/"},
+        {"kind": "rss", "label": "ai", "url": "https://www.politico.eu/tag/artificial-intelligence/feed/"},
+        {"kind": "rss", "label": "newsletters", "url": "https://www.politico.eu/newsletter/feed/"}
+      ]
+    },
+    {
+      "id": "CNBC",
+      "name": "CNBC",
+      "homepage": "https://www.cnbc.com",
+      "article_patterns": ["cnbc.com/20"],
+      "endpoints": [
+        {"kind": "rss", "label": "top", "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html"},
+        {"kind": "rss", "label": "world", "url": "https://www.cnbc.com/id/100727362/device/rss/rss.html"},
+        {"kind": "rss", "label": "asia", "url": "https://www.cnbc.com/id/19832390/device/rss/rss.html"},
+        {"kind": "rss", "label": "technology", "url": "https://www.cnbc.com/id/19854910/device/rss/rss.html"}
+      ]
+    },
+    {
+      "id": "BLOOMBERG",
+      "name": "Bloomberg",
+      "homepage": "https://www.bloomberg.com",
+      "article_patterns": ["bloomberg.com/news/articles/"],
+      "endpoints": [
+        {"kind": "rss", "label": "technology", "url": "https://www.bloomberg.com/feeds/technology/news.rss"},
+        {"kind": "rss", "label": "markets", "url": "https://www.bloomberg.com/feeds/markets/news.rss"},
+        {"kind": "rss", "label": "politics", "url": "https://www.bloomberg.com/feeds/politics/news.rss"},
+        {"kind": "rss", "label": "economics", "url": "https://www.bloomberg.com/feeds/economics/news.rss"}
+      ]
+    },
+    {
+      "id": "RHG",
+      "name": "Rhodium Group",
+      "homepage": "https://rhg.com",
+      "article_patterns": ["rhg.com/research/"],
+      "endpoints": [
+        {"kind": "html_listing", "label": "homepage-research", "url": "https://rhg.com/", "parser": "rhg_research"},
+        {"kind": "html_listing", "label": "china-research", "url": "https://rhg.com/china/", "parser": "rhg_research"},
+        {"kind": "rss", "label": "news-feed", "url": "https://rhg.com/feed/"}
+      ]
+    },
+    {
+      "id": "GAZZETTA",
+      "name": "Gazzetta",
+      "homepage": "https://www.gazzetta.xyz",
+      "article_patterns": ["gazzetta.xyz/"],
+      "endpoints": [
+        {"kind": "rss", "label": "rss", "url": "https://www.gazzetta.xyz/rss/"}
+      ]
+    },
+    {
+      "id": "SECRSS",
+      "name": "安全内参 (Secrss)",
+      "homepage": "https://www.secrss.com",
+      "article_patterns": ["secrss.com/articles/"],
+      "endpoints": [
+        {"kind": "html_listing", "label": "articles", "url": "https://www.secrss.com/articles", "parser": "secrss_listing"}
+      ]
+    },
+    {
+      "id": "CHINATALK",
+      "name": "ChinaTalk",
+      "homepage": "https://www.chinatalk.media",
+      "article_patterns": ["open.substack.com/pub/chinatalk/", "chinatalk.substack.com/", "chinatalk.media/"],
+      "endpoints": [
+        {"kind": "rss", "label": "feed", "url": "https://chinatalk.substack.com/feed"}
+      ]
+    },
+    {
+      "id": "NETASKARI",
+      "name": "Netaskari",
+      "homepage": "https://netaskari.substack.com",
+      "article_patterns": ["open.substack.com/pub/netaskari/", "netaskari.substack.com/"],
+      "endpoints": [
+        {"kind": "rss", "label": "feed", "url": "https://netaskari.substack.com/feed"}
+      ]
+    },
+    {
+      "id": "MPY",
+      "name": "Mark Parker Young",
+      "homepage": "https://markparkeryoung.net",
+      "article_patterns": ["markparkeryoung.net/posts/"],
+      "notes": "Personal site (index.xml) often returns 403; Substack mirror is the public feed.",
+      "endpoints": [
+        {"kind": "rss", "label": "substack-mirror", "url": "https://markparkeryoung.substack.com/feed"}
+      ]
+    },
+    {
+      "id": "WEIXIN",
+      "name": "WeChat Official Accounts",
+      "homepage": "https://mp.weixin.qq.com",
+      "article_patterns": ["mp.weixin.qq.com/s/"],
+      "notes": "No public RSS or article listing. Individual posts are only reachable from a share URL.",
+      "endpoints": []
+    }
+  ]
+}
