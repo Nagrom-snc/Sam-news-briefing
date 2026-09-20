@@ -1,0 +1,28 @@
+{
+  "derived_from": "260917_list.txt",
+  "match": "any",
+  "notes": "China/AI briefing terms taken from the 17 Sep 2026 intake slugs and outlets. Used to search native publisher endpoints and to filter feed headlines.",
+  "search_queries": ["China", "AI", "Huawei", "DeepSeek", "Hong Kong", "人工智能"],
+  "keywords": [
+    "China",
+    "Chinese",
+    "Beijing",
+    "Hong Kong",
+    "Xi Jinping",
+    "AI",
+    "A.I.",
+    "artificial intelligence",
+    "OpenAI",
+    "Anthropic",
+    "DeepSeek",
+    "Huawei",
+    "Nvidia",
+    "LLM",
+    "chip",
+    "semiconductor",
+    "人工智能",
+    "中国",
+    "华为",
+    "芯片"
+  ]
+}
